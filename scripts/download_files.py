@@ -2,11 +2,7 @@ import argparse
 import os
 from pykoa.koa import Koa
 import shutil
-
-import os
-import shutil
 from astropy.table import Table
-from pykoa.koa import Koa
 
 def download_files_by_date(date, output_dir='.', filename_type='all'):
     if not os.path.exists(output_dir):
