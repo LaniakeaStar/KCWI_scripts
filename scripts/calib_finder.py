@@ -9,7 +9,6 @@ import scipy
 import argparse
 
 def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_arcsec=5):
-    # Crear el directorio de salida si no existe
     if not os.path.exists(outpath):
         os.makedirs(outpath)
 
@@ -104,14 +103,14 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
         ra_dec_coords = SkyCoord(ra=table['ra'] * u.deg, dec=table['dec'] * u.deg)
         return calibrations, ra_dec_coords, table
 
-    # Verificar calibraciones y estrellas estándar para la fecha dada
+    # verify calibrations and standard stars for the given date
     print(f"Checking calibrations for {date}...")
     calibrations, ra_dec_coords, table = check_date_for_calibrations(date)
 
     if calibrations is None:
         return
 
-    # Determinar calibraciones faltantes
+    # search missing calibrations
     missing_calibrations = [cal for cal in required_calibrations if cal not in calibrations]
     print(f"Missing calibrations: {missing_calibrations}")
 
