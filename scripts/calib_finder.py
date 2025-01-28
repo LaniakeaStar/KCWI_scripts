@@ -12,6 +12,7 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
     if not os.path.exists(outpath):
         os.makedirs(outpath)
 
+    # standard stars list with name and coordinates
     stars = [
         ("l870-2", "01 37 59.34", "-04 59 44.3"),
         ("feige15", "01 49 09.4819", "+13 33 11.761"),
@@ -83,38 +84,50 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
         ("gd248", "23 26 06.69", "+16 00 21.4"),
         ("l1512-34b", "23 43 50.72545", "+32 32 46.6544")
     ]
-    
-    # convert star coordinates to SkyCoord objects
+
+    # Convert coordinates to SkyCoord objectss
     star_coords = [(name, SkyCoord(ra, dec, frame='icrs', unit=(u.hourangle, u.deg))) for name, ra, dec in stars]
 
-    # required calibrations list
-    required_calibrations = ['BIAS', 'DARK', 'FLAT', 'DOMEFLAT', 'ARCLAMP', 'CONTBARS']
+    # requierd calibrations list
+    required_calibrations = ['BIAS', 'DOMEFLAT', 'TWIFLAT', 'FLATLAMP', 'ARCLAMP', 'CONTBARS', 'DARK']
     found_dates = {cal: [] for cal in required_calibrations}
     found_dates['STANDARD'] = []
 
     def check_date_for_calibrations(check_date):
         metadata_path = os.path.join(outpath, f'koa_metadata_{check_date}.tbl')
+
+        # if metadata file doesn't exist, query metadata from KOA
+        if not os.path.isfile(metadata_path):
+            try:
+                Koa.query_date(instrument='kcwi', date=check_date, outpath=metadata_path, overwrite=True)
+            except Exception as e:
+                print(f"Error querying metadata for {check_date}: {e}")
+                return None, None, None
+
         if not os.path.isfile(metadata_path):
             print(f"No metadata found for {check_date}.")
-            return None, None
+            return None, None, None
 
         table = Table.read(metadata_path, format='ascii.ipac')
-        calibrations = list(set([str(row["koaimtyp"]).upper() for row in table]))
+        calibrations = list(set([str(row['koaimtyp']).upper() for row in table]))
         ra_dec_coords = SkyCoord(ra=table['ra'] * u.deg, dec=table['dec'] * u.deg)
         return calibrations, ra_dec_coords, table
 
-    # verify calibrations and standard stars for the given date
+    # Verify calibrations and standard stars for the given date
     print(f"Checking calibrations for {date}...")
     calibrations, ra_dec_coords, table = check_date_for_calibrations(date)
 
     if calibrations is None:
         return
 
-    # search missing calibrations
+    # determine missing calibrations
     missing_calibrations = [cal for cal in required_calibrations if cal not in calibrations]
-    print(f"Missing calibrations: {missing_calibrations}")
+    if missing_calibrations:
+        print(f"Missing calibrations: {missing_calibrations}")
+    else:
+        print("All calibrations are present :D")
 
-    #Verify if standard stars are present
+    # Verify if standard stars are present
     found_star = False
     for name, coord in star_coords:
         idx, sep, _ = match_coordinates_sky(coord, ra_dec_coords)
@@ -129,15 +142,11 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
             for delta in [-offset, offset]:
                 check_date = (pd.to_datetime(date) + pd.Timedelta(days=delta)).strftime('%Y-%m-%d')
                 print(f"Checking calibrations for {check_date}...")
-                try:
-                    calibrations, ra_dec_coords, table = check_date_for_calibrations(check_date)
-                except:
-                    continue
+                calibrations, ra_dec_coords, table = check_date_for_calibrations(check_date)
 
                 if calibrations is None:
-                    print("No calibrations found.")
                     continue
-        
+
                 for cal in missing_calibrations:
                     if cal in calibrations and check_date not in found_dates[cal]:
                         found_dates[cal].append(check_date)
@@ -150,10 +159,10 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
                             found_dates['STANDARD'].append((check_date, name, table['koaid'][idx]))
                             print(f"Standard star {name} found on {check_date}, file: {table['koaid'][idx]}")
 
-    # Report all dates where the missing calibrations were found
+    # report all dates where the missing calibrations were found
     for cal, dates in found_dates.items():
         if dates:
-            if cal == 'STANDARD': 
+            if cal == 'STANDARD':
                 if not found_star:
                     for date, name, file_id in dates:
                         print(f"Standard star {name} found on {date}, file: {file_id}.")
@@ -161,9 +170,6 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
                 print(f"Calibration {cal} found on dates: {dates}")
         elif cal in missing_calibrations:
             print(f"Calibration {cal} not found in the checked range of dates.")
-
-# Ejemplo de uso
-check_calibrations('2020-05-20', outpath='./downloads/', days_to_check=30, tolerance_arcsec=5)
 
 def main():
     parser = argparse.ArgumentParser(description = "Find missing calibrations and standard stars for a given date.")
