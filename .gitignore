@@ -1,0 +1,38 @@
+# Ignorar archivos compilados de Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Ignorar archivos de Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignorar logs y archivos temporales
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store  # Para MacOS
+
+# Ignorar archivos de configuración de entornos virtuales
+.env
+.venv/
+venv/
+Pipfile
+Pipfile.lock
+
+# Ignorar metadata generada por PyKOA
+downloads/
+*.tbl
+koa_metadata_*.tbl
+download_metadata.tbl
+
+# Ignorar archivos FITS descargados
+*.fits
+
+# Ignorar archivos de caché de Git y otros directorios temporales
+*.bak
+*.old
+*.backup
+*.temp
+
+
