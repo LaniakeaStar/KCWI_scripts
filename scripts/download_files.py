@@ -20,7 +20,7 @@ def download_files_by_date(date, output_dir='.', filename_type='all'):
     # filter the table according to the filename type
     if filename_type == 'telescope':
         table = table[table['ofname'] != '']
-    elif filename_type == 'ar':
+    elif filename_type == 'archive':
         table = table[table['ofname'] == '']
 
     # save the filtered table
