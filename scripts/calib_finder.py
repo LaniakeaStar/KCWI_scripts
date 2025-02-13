@@ -10,24 +10,28 @@ import argparse
 import csv
 
 # load standard stars from csv file
-def load_stars(filename):
+def load_stars():
+    script_dir = os.path.dirname(os.path.abspath("__file__"))  
+    
+    repo_root = os.path.abspath(os.path.join(script_dir, ".."))  
+
+    data_path = os.path.join(repo_root, "data", "standard_stars.csv")
+
     stars = []
-    with open(filename, mode = "r") as file:
+    with open(data_path, mode="r") as file:
         reader = csv.reader(file)
         next(reader)
         for row in reader:
-            stars.append((row[0], row[1], row[2]))  # (Nombre, RA, DEC)
+            stars.append((row[0], row[1], row[2]))  # (Name, RA, DEC)
+    
     return stars
 
 
 def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_arcsec=5):
     if not os.path.exists(outpath):
-        os.makedirs(outpath)
+        os.makedirs(outpath) 
 
-    script_dir = os.path.dirname(os.path.abspath("__file__"))  
-    data_path = os.path.join(script_dir, "KCWI-cosas/data", "standard_stars.csv")  
-
-    stars = load_stars(data_path)
+    stars = load_stars()
 
     # Convert coordinates to SkyCoord objectss
     star_coords = [(name, SkyCoord(ra, dec, frame='icrs', unit=(u.hourangle, u.deg))) for name, ra, dec in stars]
