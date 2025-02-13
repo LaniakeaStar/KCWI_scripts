@@ -63,7 +63,7 @@ def main():
     parser = argparse.ArgumentParser(description="Download KCWI data from the Keck Observatory Archive (KOA) by date.")
     parser.add_argument('date', type=str, help="Fecha de la observación en formato 'YYYY-MM-DD'.")
     parser.add_argument('filename_type', type=str, default='all', choices=['all', 'telescope', 'archive'], help="Tipo de nombre de archivo para filtrar (por defecto, 'all').")
-    parser.add_argument('--output_dir', type=str, default='./outputKC/', help="Directorio de salida (por defecto, donde estás en la terminal).")
+    parser.add_argument('--output_dir', type=str, default='.', help="Directorio de salida (por defecto, donde estás en la terminal).")
     
 
     args = parser.parse_args()
