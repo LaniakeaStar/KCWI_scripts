@@ -38,8 +38,8 @@ def main():
 
     try:
         table = obs_table_target(ra=args.ra, dec=args.dec, data_type=args.data_type, radius=args.radius)
-        # Mostrar la tabla en la terminal
         print(table)
+        
     except Exception as e:
         print(f"Error: {e}")
 
