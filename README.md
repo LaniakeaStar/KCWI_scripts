@@ -86,8 +86,15 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 - `--arc_min_nframes`: número de imágenes *arclapms* necesitadas (por defecto: `1`).
 - `--contbars_min_nframes`: número de imágenes *contbars* necesitadas (por defecto: `1`).
 
- **Ejemplos de uso:**\n
+ **Ejemplos de uso:**
+
+crea archivo .txt:
 python calib_finder.py 2020-05-16 2 5 --summary
+
+no crea archivo .txt:
+python calib_finder.py 2020-05-16 2 5
+
 
 
 Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
+Se crean archivos de metadata, por ello es necesario el output de salida. Por ello, si no borras los archivos y ejecutas el código en la misma fecha, demorará consideravlemente menos.
