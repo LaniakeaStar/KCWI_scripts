@@ -93,16 +93,7 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 **no crea archivo txt:**    python calib_finder.py 2020-05-16 2 5
 
 
-
-Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
-
-Se crean archivos de metadata, por esto es necesario el output de salida. Por lo mismo, si no borras los archivos y ejecutas el código en la misma fecha, demorará consideravlemente menos.
-
-
-
-
-
-
-
-
-$\sum_{i=1}^{10} \pi$
+ **Observaciones:**
+- Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
+- Se crean archivos de metadata, por esto es necesario el output de salida.
+- Por lo anterior, si no borras los archivos y ejecutas el script en la misma fecha, demorará considerablemente menos, al no hacer nuevamente el query.
