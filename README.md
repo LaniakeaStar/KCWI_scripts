@@ -28,7 +28,7 @@ Dado un objeto con coordenadas (RA, DEC) y un radio de tolerancia en arcosegundo
 - `dec`: valor de la coordenada DEC
 
  **Opcionales:**
-- `--radius`: Radio de tolerancia en arcosegundos (por defecto: 30)
+- `--radius`: Radio de tolerancia en arcosegundos (por defecto: `30`)
 - `--outpath`: Directorio de salida (por defecto `"."`).
 
  **Ejemplo de uso:**
@@ -97,5 +97,12 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
 
 Se crean archivos de metadata, por esto es necesario el output de salida. Por lo mismo, si no borras los archivos y ejecutas el código en la misma fecha, demorará consideravlemente menos.
+
+
+
+
+
+
+
 
 $\sum_{i=1}^{10} \pi$
