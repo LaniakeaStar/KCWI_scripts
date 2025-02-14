@@ -105,11 +105,14 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
 
                 if not found_star:
                     for name, coord in star_coords:
-                        idx, sep, _ = match_coordinates_sky(coord, ra_dec_coords)
-                        if sep.arcsecond <= tolerance_arcsec and check_date not in [d[0] for d in found_dates['STANDARD']]:
-                            found_dates['STANDARD'].append((check_date, name, table['koaid'][idx]))
-                            print(f"Standard star {name} found on {check_date}, file: {table['koaid'][idx]}")
-
+                        try:
+                            idx, sep, _ = match_coordinates_sky(coord, ra_dec_coords)
+                            if sep.arcsecond <= tolerance_arcsec and check_date not in [d[0] for d in found_dates['STANDARD']]:
+                                found_dates['STANDARD'].append((check_date, name, table['koaid'][idx]))
+                                print(f"Standard star {name} found on {check_date}, file: {table['koaid'][idx]}")
+                        except:
+                            pass
+                        
     # report all dates where the missing calibrations were found
     for cal, dates in found_dates.items():
         if dates:
