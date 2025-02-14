@@ -136,7 +136,7 @@ def find_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_a
                 break  
 
 
-    print("\n📊 ** Summary of all calibrations found: **")
+    print("\n📊 ** Summary of all calibrations found **")
     for cal, found in found_calibrations.items():
         if found:
             print(f"✅ {cal}: {len(found)} frames found.")
@@ -191,7 +191,7 @@ def main():
     parser.add_argument('date', type=str, help = "Observation date in format: 'YYYY-MM-DD'.")
     parser.add_argument('days_to_check', type=int, default=7, help="Number of days to check before and after the given date.")
     parser.add_argument('tolerance_arcsec', type=int, default=5, help = "Tolerance in arcseconds for matching standard stars.")
-    parser.add_argument('--summary', action='store_true', help="Generate a summary file with the results.")
+    parser.add_argument('--summary', action = "store_true", help="Generate a summary file with the results. [y/n]")
     parser.add_argument('--output_dir', type=str, default='.', help = "Output directory for the metadata files.")
     parser.add_argument('--bias_min_nframes', type=int, default=7, help = "Minumun number of BIAS frames required.")
     parser.add_argument('--flatlamp_min_nframes', type=int, default=6, help = "Minumun number of FLATLAMP frames required.")
@@ -204,8 +204,9 @@ def main():
     args = parser.parse_args()
 
     try:
-        find_calibrations(args.date, outpath = args.output_dir, days_to_check = args.days_to_check, tolerance_arcsec = args.tolerance_arcsec, bias_min_nframes = args.bias_min_nframes, 
-                          flatlamp_min_nframes = args.flatlamp_min_nframes, domeflat_min_nframes = args.domeflat_min_nframes, twiflat_min_nframes = args.twiflat_min_nframes, 
+        find_calibrations(args.date, outpath = args.output_dir, days_to_check = args.days_to_check, tolerance_arcsec = args.tolerance_arcsec, 
+                          summary = args.summary,  bias_min_nframes = args.bias_min_nframes, flatlamp_min_nframes = args.flatlamp_min_nframes, 
+                          domeflat_min_nframes = args.domeflat_min_nframes, twiflat_min_nframes = args.twiflat_min_nframes, 
                           dark_min_nframes = args.dark_min_nframes, arc_min_nframes = args.arc_min_nframes, contbars_min_nframes = args.contbars_min_nframes)
     
     except Exception as e:
@@ -214,4 +215,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-# hola
+# hola :D
