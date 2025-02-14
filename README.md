@@ -5,17 +5,17 @@
 ### 1 **`obs_table_date`**  
 Dada una fecha, imprime una tabla con las observaciones y/o calibraciones de esa fecha.  
 
- ** Argumentos:**
+ **Argumentos:**
 - `date`: Fecha en formato `'YYYY-MM-DD'`.
 
- ** Opcionales:**
+ **Opcionales:**
 - `--data-type`: Define qué tipo de datos incluir en la tabla:
     - `"both"` → Ciencia y calibraciones.
     - `"science"` → Solo objetos de ciencia.
     - `"calibration"` → Solo calibraciones.
 - `--outpath`: Directorio de salida (por defecto `"."`).
 
- ** Ejemplo de uso: **
+ **Ejemplo de uso:**
 python obs_table_date.py 2024-01-01 --data-type both
 
 
@@ -23,15 +23,15 @@ python obs_table_date.py 2024-01-01 --data-type both
 ### 2 **`obs_table_tagert`**
 Dado un objeto con coordenadas (RA, DEC) y un radio de tolerancia en arcosegundos, filtra y muestra en una tabla todas las observaciones registradas dentro de esa región del cielo.
 
- ** Argumentos:**
+ **Argumentos:**
 - `ra`: valor de la coordenada RA
 - `dec`: valor de la coordenada DEC
 
- ** Opcionales:**
+ **Opcionales:**
 - `--radius`: Radio de tolerancia en arcosegundos (por defecto: 30)
 - `--outpath`: Directorio de salida (por defecto `"."`).
 
- ** Ejemplo de uso: **
+ **Ejemplo de uso:**
 python obs_table_target.py 260.45 88.71
 
 
@@ -39,14 +39,14 @@ python obs_table_target.py 260.45 88.71
 ### 3 **`download_files`**
 Dada una fecha de observación, descarga los archivos FITS correspondientes desde el KOA.
 
- ** Argumentos:**
+ **Argumentos:**
 - `date`: Fecha en formato `'YYYY-MM-DD'`.
 - `filename_type`: tipos de archivos que se quieren descargar (`all`, `telescope`, `archive`)
 
- ** Opcionales:**
+ **Opcionales:**
 - `--output_dir`: Directorio de salida (por defecto `"."`).
 
- ** Ejemplo de uso: **
+ **Ejemplo de uso:**
 python download_files.py 2020-05-15 telescope --output_dir ./downloads/
 
 
@@ -54,15 +54,15 @@ python download_files.py 2020-05-15 telescope --output_dir ./downloads/
 ### 4 **`calib_date_finder`**
 Dado una fecha y un número de días a revisar, este script busca en fechas anteriores y posteriores para identificar calibraciones faltantes. Imprime una lista de las fechas en las que se encuentran dichas calibraciones, incluyendo: bias, domeflats, twilight flats, flatlamps, arclamps, contbars, darks y estrellas estándar.
 
- ** Argumentos:**
+ **Argumentos:**
 - `date`: Fecha en formato `'YYYY-MM-DD'`.
 - `days_to_check`: cantidad de días que se quiere revisar (se hará hacia adelante y hacia atrás, si se le da un      valor de 30, revisará un total de 60 días).
 - `tolerance_arcsec`: radio de tolerancia, en arcosegundos, para encontrar coincidencias con estrellas estándar.
 
- ** Opcionales:**
+ **Opcionales:**
 - `--output_dir`: Directorio de salida (por defecto `"."`).
 
- ** Ejemplo de uso: **
+ **Ejemplo de uso:**
 python calib_date_finder.py 2020-05-16 7 5
 
 
@@ -70,12 +70,12 @@ python calib_date_finder.py 2020-05-16 7 5
 ### 5 **`calib_finder`**
 Similar a calib_date_finder, este script busca calibraciones faltantes en días anteriores y posteriores a una fecha dada. A diferencia del anterior, se detendrá en cuanto encuentre la cantidad mínima requerida de cada calibración. Para cada una, mostrará la fecha y el nombre del archivo correspondiente.
 
- ** Argumentos:**
+ **Argumentos:**
 - `date`: Fecha en formato `'YYYY-MM-DD'`.
 - `days_to_check`: cantidad de días que se quiere revisar (se hará hacia adelante y hacia atrás, si se le da un      valor de 30, revisará un total de 60 días).
 - `tolerance_arcsec`: radio de tolerancia, en arcosegundos, para encontrar coincidencias con estrellas estándar.
 
- ** Opcionales:**
+ **Opcionales:**
 - `--summary`: crea un archivo .txt de todas las calibraciones encontradas. Útil si no quieres solamente tenerlo     impreso en la terminal. 
 - `--output_dir`: Directorio de salida (por defecto `"."`).
 - `--bias_min_nframes`: número de imágenes *bias* necesitadas (por defecto: `7`). 
@@ -86,5 +86,8 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 - `--arc_min_nframes`: número de imágenes *arclapms* necesitadas (por defecto: `1`).
 - `--contbars_min_nframes`: número de imágenes *contbars* necesitadas (por defecto: `1`).
 
- ** Ejemplo de uso: **
-python calib_finder.py 2020-05-16 7 5
+ **Ejemplo de uso:**
+python calib_finder.py 2020-05-05 2 5 --summary
+
+
+Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
