@@ -72,11 +72,11 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 
  **Argumentos:**
 - `date`: Fecha en formato `'YYYY-MM-DD'`.
-- `days_to_check`: cantidad de días que se quiere revisar (se hará hacia adelante y hacia atrás, si se le da un      valor de 30, revisará un total de 60 días).
+- `days_to_check`: cantidad de días que se quiere revisar (se hará hacia adelante y hacia atrás, si se le da un valor de 30, revisará un total de 60 días).
 - `tolerance_arcsec`: radio de tolerancia, en arcosegundos, para encontrar coincidencias con estrellas estándar.
 
  **Opcionales:**
-- `--summary`: crea un archivo .txt de todas las calibraciones encontradas. Útil si no quieres solamente tenerlo     impreso en la terminal. 
+- `--summary`: crea un archivo .txt de todas las calibraciones encontradas. Útil si no quieres solamente tenerlo impreso en la terminal. 
 - `--output_dir`: Directorio de salida (por defecto `"."`).
 - `--bias_min_nframes`: número de imágenes *bias* necesitadas (por defecto: `7`). 
 - `--flatlamp_min_nframes`: número de imágenes *flatlamp* necesitadas (por defecto: `6`).
@@ -88,13 +88,14 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 
  **Ejemplos de uso:**
 
-crea archivo .txt:
-python calib_finder.py 2020-05-16 2 5 --summary
+**crea archivo txt:**    python calib_finder.py 2020-05-16 2 5 --summary
 
-no crea archivo .txt:
-python calib_finder.py 2020-05-16 2 5
+**no crea archivo txt:**    python calib_finder.py 2020-05-16 2 5
 
 
 
 Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
-Se crean archivos de metadata, por ello es necesario el output de salida. Por ello, si no borras los archivos y ejecutas el código en la misma fecha, demorará consideravlemente menos.
+
+Se crean archivos de metadata, por esto es necesario el output de salida. Por lo mismo, si no borras los archivos y ejecutas el código en la misma fecha, demorará consideravlemente menos.
+
+$\sum_{i=1}^{10} \pi$
