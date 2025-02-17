@@ -95,5 +95,5 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 
  **Observaciones:**
 - Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
-- Se crean archivos de metadata, por esto es necesario el output de salida.
+- Se crean archivos de metadata, por esto es necesario el directorio de salida.
 - Por lo anterior, si no borras los archivos y ejecutas el script en la misma fecha, demorará considerablemente menos, al no hacer nuevamente el query.
