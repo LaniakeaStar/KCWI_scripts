@@ -26,8 +26,9 @@ downloads/
 koa_metadata_*.tbl
 download_metadata.tbl
 
-# Ignorar archivos FITS descargados
+# Ignorar archivos FITS y txt descargados
 *.fits
+*.txt
 
 # Ignorar archivos de caché de Git y otros directorios temporales
 *.bak
