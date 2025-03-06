@@ -1,6 +1,6 @@
-# Scripts para hacer cosas con el KCWI yipiee #
+# Scripts para trabajar con datos del KCWI yipiee #
 
-**Descripción de las scripts:**
+**Descripción de los scripts:**
 
 ### 1 **`obs_table_date`**  
 Dada una fecha, imprime una tabla con las observaciones y/o calibraciones de esa fecha.  
@@ -16,11 +16,11 @@ Dada una fecha, imprime una tabla con las observaciones y/o calibraciones de esa
 - `--outpath`: Directorio de salida (por defecto `"."`).
 
  **Ejemplo de uso:**
-python obs_table_date.py 2024-01-01 --data-type both
+obs_table_date 2024-01-01 --data-type both
 
 
 
-### 2 **`obs_table_tagert`**
+### 2 **`obs_table_target`**
 Dado un objeto con coordenadas (RA, DEC) y un radio de tolerancia en arcosegundos, filtra y muestra en una tabla todas las observaciones registradas dentro de esa región del cielo.
 
  **Argumentos:**
@@ -32,7 +32,7 @@ Dado un objeto con coordenadas (RA, DEC) y un radio de tolerancia en arcosegundo
 - `--outpath`: Directorio de salida (por defecto `"."`).
 
  **Ejemplo de uso:**
-python obs_table_target.py 260.45 88.71
+obs_table_target 260.45 88.71
 
 
 
@@ -47,11 +47,22 @@ Dada una fecha de observación, descarga los archivos FITS correspondientes desd
 - `--output_dir`: Directorio de salida (por defecto `"."`).
 
  **Ejemplo de uso:**
-python download_files.py 2020-05-15 telescope --output_dir ./downloads/
+download_files 2020-05-15 telescope --output_dir ./downloads/
 
 
 
-### 4 **`calib_date_finder`**
+### 4 **`rename_files`**
+Al descargar archivos usando pykoa, estos se descargan con el nombre dado por el `koaid`. Mediante este script, a todos los archivos descargados se les cambiará su nombre según su `ofname` correspondiente, el cual se encuentra en la tabla de metadata.
+
+ **Argumento opcional:**
+ - `directory`: Directorio en el que quieres que se ejecute este script (por defecto `"."`). 
+
+ **Ejemplo de uso:**
+rename_files
+
+
+
+### 5 **`calib_date_finder`**
 Dado una fecha y un número de días a revisar, este script busca en fechas anteriores y posteriores para identificar calibraciones faltantes. Imprime una lista de las fechas en las que se encuentran dichas calibraciones, incluyendo: bias, domeflats, twilight flats, flatlamps, arclamps, contbars, darks y estrellas estándar.
 
  **Argumentos:**
@@ -63,11 +74,11 @@ Dado una fecha y un número de días a revisar, este script busca en fechas ante
 - `--output_dir`: Directorio de salida (por defecto `"."`).
 
  **Ejemplo de uso:**
-python calib_date_finder.py 2020-05-16 7 5
+calib_date_finder 2020-05-16 7 5
 
 
 
-### 5 **`calib_finder`**
+### 6 **`calib_finder`**
 Similar a calib_date_finder, este script busca calibraciones faltantes en días anteriores y posteriores a una fecha dada. A diferencia del anterior, se detendrá en cuanto encuentre la cantidad mínima requerida de cada calibración. Para cada una, mostrará la fecha y el nombre del archivo correspondiente.
 
  **Argumentos:**
@@ -88,12 +99,13 @@ Similar a calib_date_finder, este script busca calibraciones faltantes en días 
 
  **Ejemplos de uso:**
 
-**crea archivo txt:**    python calib_finder.py 2020-05-16 2 5 --summary
+**crea archivo txt:**    calib_finder 2020-05-16 2 5 --summary
 
-**no crea archivo txt:**    python calib_finder.py 2020-05-16 2 5
+**no crea archivo txt:**    calib_finder 2020-05-16 2 5
 
 
  **Observaciones:**
-- Todos los scripts realizan una consulta al KOA, por lo que pueden tardarse un poco.
+- Todos los scripts (menos `rename_files`) realizan una consulta al KOA, por lo que pueden tardarse un poco.
 - Se crean archivos de metadata, por esto es necesario el directorio de salida.
 - Por lo anterior, si no borras los archivos y ejecutas el script en la misma fecha, demorará considerablemente menos, al no hacer nuevamente el query. (**Excepto por `download_files`**)
+- **No borres 'koa_metadata_{date}_filtered.tbl' antes de ejecutar `rename_files`**
