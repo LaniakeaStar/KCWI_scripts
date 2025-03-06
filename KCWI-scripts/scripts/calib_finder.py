@@ -12,6 +12,8 @@ def load_stars():
     
     repo_root = os.path.abspath(os.path.join(script_dir, ".."))  
 
+    repo_root = os.path.abspath(os.path.join(repo_root, ".."))
+
     data_path = os.path.join(repo_root, "data", "standard_stars.csv")
 
     stars = []
