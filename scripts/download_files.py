@@ -44,18 +44,13 @@ def download_files_by_date(date, output_dir='.', filename_type='all'):
                 if source_path != destination_path:
                     shutil.move(source_path, destination_path)
 
-    # Eliminar directorios vacíos
-    for root, dirs, files in os.walk(output_dir, topdown=False):
-        for dir in dirs:
-            dir_path = os.path.join(root, dir)
-            try:
-                os.rmdir(dir_path)
-            except OSError:
-                pass  # directory not empty
+    # remove not desired directories
+    for folder in ["lev0","calib"]:
+        folder_path = os.path.join(output_dir, folder)
+        if os.path.exists(folder_path):
+            shutil.rmtree(folder_path)
 
-    print(f"Archivos descargados en el directorio: {output_dir}")
-
-
+    print(f"Files downloaded to {output_dir}.")
 
 
 
