@@ -8,19 +8,13 @@ from pykoa.koa import Koa
 import scipy
 import argparse
 import csv
+from importlib.resources import files
 
 # load standard stars from csv file
 def load_stars():
-    script_dir = os.path.dirname(os.path.abspath("__file__"))  
-    
-    repo_root = os.path.abspath(os.path.join(script_dir, ".."))  
-
-    repo_root = os.path.abspath(os.path.join(repo_root, ".."))
-
-    data_path = os.path.join(repo_root, "data", "standard_stars.csv")
-
+    data_file = files('KCWI_scripts.data').joinpath('standard_stars.csv')
     stars = []
-    with open(data_path, mode="r") as file:
+    with open(data_file, mode="r") as file:
         reader = csv.reader(file)
         next(reader)
         for row in reader:
