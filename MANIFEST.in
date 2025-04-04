@@ -1,1 +1,1 @@
-include data/*.csv
+include KCWI_scripts/data/standard_stars.csv
