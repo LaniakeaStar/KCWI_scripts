@@ -9,7 +9,7 @@ import argparse
 from importlib.resources import files
 
 def load_stars():
-    data_file = files('KCWI_scripts.data').joinpath('standard_stars.csv')
+    data_file = files("KCWI_scripts").joinpath("data", "standard_stars.csv")
     stars = []
     with open(data_file, mode="r") as file:
         reader = csv.reader(file)
