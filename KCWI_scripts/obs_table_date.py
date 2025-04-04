@@ -8,7 +8,15 @@ def obs_table_date(date, output_dir='.', data_type='both'):
         os.makedirs(output_dir)
         
     outpath = os.path.join(output_dir, f'koa_metadata_{date}.tbl')
-    Koa.query_date(instrument='kcwi', date=date, outpath=outpath, overwrite=True) # Query by date
+    
+    if not os.path.isfile(outpath):
+        try:
+            Koa.query_date(instrument='kcwi', date=date, outpath=outpath, overwrite=True)
+        except Exception as e:
+            print(f"❌ Error querying metadata for {date}: {e}")
+            return None, None, None
+
+     # Query by date
     table = Table.read(outpath, format='ascii.ipac')
     
     # filter by data type

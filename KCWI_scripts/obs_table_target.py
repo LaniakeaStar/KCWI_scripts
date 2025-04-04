@@ -7,9 +7,15 @@ def obs_table_target(ra, dec, radius=30, output_dir='.', data_type='both'):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     pos = f'circle {ra} {dec} {radius / 3600}'  # Convert radius to degrees
-    outpath = os.path.join(output_dir, 'position_search.tbl')
+    outpath = os.path.join(output_dir, f'position_search_{ra}_{dec}.tbl')
+    # Check if the file already exists
+    if not os.path.isfile(outpath):
+        try:
+            Koa.query_position(instrument='kcwi', pos=pos, outpath=outpath, overwrite=True)
+        except Exception as e:
+            print(f"❌ Error querying metadata for position {pos}: {e}")
+            return None, None, None
 
-    Koa.query_position(instrument='kcwi', pos=pos, outpath=outpath, overwrite=True)
     table = Table.read(outpath, format='ascii.ipac')
 
     # Filter by data type
