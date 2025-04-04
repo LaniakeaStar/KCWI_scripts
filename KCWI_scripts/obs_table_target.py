@@ -7,7 +7,7 @@ def obs_table_target(ra, dec, radius=30, output_dir='.', data_type='both'):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     pos = f'circle {ra} {dec} {radius / 3600}'  # Convert radius to degrees
-    outpath = os.path.join(output_dir, f'position_search_{ra}_{dec}.tbl')
+    outpath = os.path.join(output_dir, f'position_search_{ra}_{dec}_{radius}.tbl')
     # Check if the file already exists
     if not os.path.isfile(outpath):
         try:
