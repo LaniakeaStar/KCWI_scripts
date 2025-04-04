@@ -10,7 +10,10 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/LaniakeaStar/KCWI_scripts",
     packages=find_packages(),
-    include_package_data=True,
+    package_data={
+    "KCWI_scripts": ["data/standard_stars.csv"],
+    },
+    include_package_data = True,
     install_requires=[
         "numpy",
         "pandas",
