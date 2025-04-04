@@ -20,6 +20,12 @@ venv/
 Pipfile
 Pipfile.lock
 
+# Ignorar archivos de caché de pip
+pip-log.txt
+pip-wheel-metadata/
+pip-selfcheck.json
+*.egg-info/
+
 # Ignorar metadata generada por PyKOA
 downloads/
 *.tbl
