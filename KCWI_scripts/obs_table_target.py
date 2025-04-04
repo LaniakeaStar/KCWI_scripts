@@ -3,7 +3,7 @@ from astropy.table import Table
 from pykoa.koa import Koa
 import os
 
-def obs_table_target(ra, dec, radius=30, output_dir='./outputKC/', data_type='both'):
+def obs_table_target(ra, dec, radius=30, output_dir='.', data_type='both'):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     pos = f'circle {ra} {dec} {radius / 3600}'  # Convert radius to degrees
@@ -32,7 +32,7 @@ def main():
     parser.add_argument('--data_type', type=str, default='both', choices=['both', 'science', 'calibration'],
                         help="Tipo de datos: 'both', 'science' o 'calibration' (por defecto 'both').")
     parser.add_argument('--radius', type=float, default=30, help="Radio de búsqueda en arcsec (por defecto 30'').")
-    parser.add_argument('--outpath', type=str, default='./outputKC/', help="Directorio de salida (por defecto './outputKC/').")
+    parser.add_argument('--outpath', type=str, default='.', help="Directorio de salida (por defecto './outputKC/').")
 
     args = parser.parse_args()
 

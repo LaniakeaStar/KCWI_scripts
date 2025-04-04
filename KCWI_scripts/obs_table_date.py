@@ -3,7 +3,7 @@ import os
 from astropy.table import Table
 from pykoa.koa import Koa
 
-def obs_table_date(date, output_dir='./outputKC/', data_type='both'):
+def obs_table_date(date, output_dir='.', data_type='both'):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
@@ -29,7 +29,7 @@ def main():
     parser.add_argument('date', type=str, help="Fecha de la observación en formato 'YYYY-MM-DD'.")
     parser.add_argument('--data_type', type=str, default='both', choices=['both', 'science', 'calibration'],
                         help="Tipo de datos: 'both', 'science' o 'calibration' (por defecto 'both').")
-    parser.add_argument('--outpath', type=str, default='./outputKC/', help="Directorio de salida (por defecto './outputKC/').")
+    parser.add_argument('--outpath', type=str, default='.', help="Directorio de salida (por defecto './outputKC/').")
 
     args = parser.parse_args()
 
