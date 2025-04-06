@@ -9,7 +9,7 @@ For a given date, prints a table with the observations and/or observations of th
 - `date`: Date in format `'YYYY-MM-DD'`.
 
  **Optionals:**
-- `--data-type`: Type of data that the table will include:
+- `--data-type`:Type of data to include in the table:
     - `"both"` → Science and calibrations.
     - `"science"` → Only science.
     - `"calibration"` → Only calibrations.
@@ -90,13 +90,13 @@ Similar to calib_date_finder, will search missing calibratios in anterior and po
  **Optionals**
 - `--summary`: Creates a .txt file of all calibrations found. 
 - `--output_dir`: Directorio de salida (por defecto `"."`).
-- `--bias_min_nframes`: number of *bias* images needed (by default: `7`). 
-- `--flatlamp_min_nframes`: number of *flatlamp* images needed (by default: `6`).
-- `--domeflat_min_nframes`: number of *domeflats* images needed (by default: `3`).
-- `--twiflats_min_nframes`: number of *twiflats* images needed (by default: `1`).
-- `--dark_min_nframes`: number of *darks* images needed (by default: `3`).
-- `--arc_min_nframes`: number of *arclapms* images needed (by default: `1`).
-- `--contbars_min_nframes`: number of *contbars* images needed (by default: `1`).
+- `--bias_min_nframes`: number of *bias* frames needed (by default: `7`). 
+- `--flatlamp_min_nframes`: number of *flatlamp* frames needed (by default: `6`).
+- `--domeflat_min_nframes`: number of *domeflats* frames needed (by default: `3`).
+- `--twiflats_min_nframes`: number of *twiflats* frames needed (by default: `1`).
+- `--dark_min_nframes`: number of *darks* frames needed (by default: `3`).
+- `--arc_min_nframes`: number of *arclapms* frames needed (by default: `1`).
+- `--contbars_min_nframes`: number of *contbars* frames needed (by default: `1`).
 
  **Usage example:**
 
@@ -105,8 +105,8 @@ Similar to calib_date_finder, will search missing calibratios in anterior and po
 **Doesn't creates a txt file:**    calib_finder 2020-05-16 2 5
 
 
- **Observations:**
-- All scripts (except for `rename_files`) will do a quety to KOA, so they can take some time.
+ **Notes:**
+- All scripts (except for `rename_files`) will do a query to KOA, so they can take some time.
 - Metadata files will be created, that's why the output directory is needed.
-- If you don't delete the metadata files and use the script for the same date, will take less time, because in not doing again the query. (**Except for `download_files`**)
-- **Don't delet 'koa_metadata_{date}_filtered.tbl' befor executing `rename_files`**
+- If you don't delete the metadata files and use the script for the same date, will take less time, because in not doing again the query (**Except for `download_files` and `rename_files`**).
+- **Don't delete 'koa_metadata_{date}_filtered.tbl' before running `rename_files`**.
