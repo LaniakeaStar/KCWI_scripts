@@ -1,111 +1,112 @@
 # Scripts para trabajar con datos del KCWI yipiee #
 
-**Descripción de los scripts:**
+**Description of scripts:**
 
 ### 1 **`obs_table_date`**  
-Dada una fecha, imprime una tabla con las observaciones y/o calibraciones de esa fecha.  
+For a given date, prints a table with the observations and/or observations of that day.
 
- **Argumentos:**
-- `date`: Fecha en formato `'YYYY-MM-DD'`.
+ **Arguments:**
+- `date`: Date in format `'YYYY-MM-DD'`.
 
- **Opcionales:**
-- `--data-type`: Define qué tipo de datos incluir en la tabla:
-    - `"both"` → Ciencia y calibraciones.
-    - `"science"` → Solo objetos de ciencia.
-    - `"calibration"` → Solo calibraciones.
-- `--outpath`: Directorio de salida (por defecto `"."`).
+ **Optionals:**
+- `--data-type`: Type of data that the table will include:
+    - `"both"` → Science and calibrations.
+    - `"science"` → Only science.
+    - `"calibration"` → Only calibrations.
+- `--outpath`: Output directory (by default: `"."`).
 
- **Ejemplo de uso:**
+ **Usage example:**
 obs_table_date 2024-01-01 --data-type both
 
 
 
 ### 2 **`obs_table_target`**
-Dado un objeto con coordenadas (RA, DEC) y un radio de tolerancia en arcosegundos, filtra y muestra en una tabla todas las observaciones registradas dentro de esa región del cielo.
+For a given object with coordinates (RA, DEC) and a tolerance radius in arcseconds, prints a table of all observations registered in that sky region.
 
- **Argumentos:**
-- `ra`: valor de la coordenada RA
-- `dec`: valor de la coordenada DEC
+ **Arguments:**
+- `ra`: RA coordinate value.
+- `dec`: DEC coordinate value.
 
- **Opcionales:**
-- `--radius`: Radio de tolerancia en arcosegundos (por defecto: `30`)
-- `--outpath`: Directorio de salida (por defecto `"."`).
+ **Optionals:**
+- `--radius`: Tolerance radius in arcsecondss (by default: `30`)
+- `--outpath`: Output directory (by default: `"."`).
 
- **Ejemplo de uso:**
+ **Usage example:**
 obs_table_target 260.45 88.71
 
 
 
 ### 3 **`download_files`**
-Dada una fecha de observación, descarga los archivos FITS correspondientes desde el KOA.
+For a given date, downloads all FITS files from a query to KOA.
 
- **Argumentos:**
-- `date`: Fecha en formato `'YYYY-MM-DD'`.
-- `filename_type`: tipos de archivos que se quieren descargar (`all`, `telescope`, `archive`)
+ **Arguments:**
+- `date`: Date in format `'YYYY-MM-DD'`.
+- `filename_type`: type of files you want to download (`all`, `telescope`, `archive`)
 
- **Opcionales:**
-- `--output_dir`: Directorio de salida (por defecto `"."`).
+ **Optionals:**
+- `--output_dir`: Output directory (by default: `"."`).
 
- **Ejemplo de uso:**
+ **Usage example:**
 download_files 2020-05-15 telescope --output_dir ./downloads/
 
 
 
 ### 4 **`rename_files`**
-Al descargar archivos usando pykoa, estos se descargan con el nombre dado por el `koaid`. Mediante este script, a todos los archivos descargados se les cambiará su nombre según su `ofname` correspondiente, el cual se encuentra en la tabla de metadata.
+When downloading files using pykoa, they will be named by their `koaid`. With this script, all files will be renamed by their `ofname`, wich are in the metadata table.
 
- **Argumento opcional:**
- - `directory`: Directorio en el que quieres que se ejecute este script (por defecto `"."`). 
+ **Optional argument:**
+ - `directory`: Directory in which you want to execute the script(por defecto `"."`). 
 
- **Ejemplo de uso:**
+ **Usage example:**
 rename_files
 
 
 
 ### 5 **`calib_date_finder`**
-Dado una fecha y un número de días a revisar, este script busca en fechas anteriores y posteriores para identificar calibraciones faltantes. Imprime una lista de las fechas en las que se encuentran dichas calibraciones, incluyendo: bias, domeflats, twilight flats, flatlamps, arclamps, contbars, darks y estrellas estándar.
+For a given date and number of days to search, the script will look in anterior and posterior dates to identify missing calibratios. Prints a list of dates in which are those missing calibrations, incuding: bias, domeflats, twilight flats, flatlamps, arclamps, contbars, darks and standard stars.
 
- **Argumentos:**
-- `date`: Fecha en formato `'YYYY-MM-DD'`.
-- `days_to_check`: cantidad de días que se quiere revisar (se hará hacia adelante y hacia atrás, si se le da un      valor de 30, revisará un total de 60 días).
-- `tolerance_arcsec`: radio de tolerancia, en arcosegundos, para encontrar coincidencias con estrellas estándar.
+ **Arguments:**
+- `date`: Date in format `'YYYY-MM-DD'`.
+- `days_to_check`: Number of days you want to search for (will be always twice of the given number).
 
- **Opcionales:**
-- `--output_dir`: Directorio de salida (por defecto `"."`).
+- `tolerance_arcsec`: Tolerance radius in arcseconds to find matching standard stars.
 
- **Ejemplo de uso:**
+ **Optionals**
+- `--output_dir`: Output directory (by default: `"."`).
+
+ **Usage example:**
 calib_date_finder 2020-05-16 7 5
 
 
 
 ### 6 **`calib_finder`**
-Similar a calib_date_finder, este script busca calibraciones faltantes en días anteriores y posteriores a una fecha dada. A diferencia del anterior, se detendrá en cuanto encuentre la cantidad mínima requerida de cada calibración. Para cada una, mostrará la fecha y el nombre del archivo correspondiente.
+Similar to calib_date_finder, will search missing calibratios in anterior and posterior dates. This one will stop when the minimum number of all calibratios were found. for each one will show the date and name file.
 
- **Argumentos:**
-- `date`: Fecha en formato `'YYYY-MM-DD'`.
-- `days_to_check`: cantidad de días que se quiere revisar (se hará hacia adelante y hacia atrás, si se le da un valor de 30, revisará un total de 60 días).
-- `tolerance_arcsec`: radio de tolerancia, en arcosegundos, para encontrar coincidencias con estrellas estándar.
+ **Arguments:**
+- `date`: Date in format `'YYYY-MM-DD'`.
+- `days_to_check`: Number of days you want to search for (will be always twice of the given number).
+- `tolerance_arcsec`: Tolerance radius in arcseconds to find matching standard stars
 
- **Opcionales:**
-- `--summary`: crea un archivo .txt de todas las calibraciones encontradas. Útil si no quieres solamente tenerlo impreso en la terminal. 
+ **Optionals**
+- `--summary`: Creates a .txt file of all calibrations found. 
 - `--output_dir`: Directorio de salida (por defecto `"."`).
-- `--bias_min_nframes`: número de imágenes *bias* necesitadas (por defecto: `7`). 
-- `--flatlamp_min_nframes`: número de imágenes *flatlamp* necesitadas (por defecto: `6`).
-- `--domeflat_min_nframes`: número de imágenes *domeflats* necesitadas (por defecto: `3`).
-- `--twiflats_min_nframes`: número de imágenes *twiflats* necesitadas (por defecto: `1`).
-- `--dark_min_nframes`: número de imágenes *darks* necesitadas (por defecto: `3`).
-- `--arc_min_nframes`: número de imágenes *arclapms* necesitadas (por defecto: `1`).
-- `--contbars_min_nframes`: número de imágenes *contbars* necesitadas (por defecto: `1`).
+- `--bias_min_nframes`: number of *bias* images needed (by default: `7`). 
+- `--flatlamp_min_nframes`: number of *flatlamp* images needed (by default: `6`).
+- `--domeflat_min_nframes`: number of *domeflats* images needed (by default: `3`).
+- `--twiflats_min_nframes`: number of *twiflats* images needed (by default: `1`).
+- `--dark_min_nframes`: number of *darks* images needed (by default: `3`).
+- `--arc_min_nframes`: number of *arclapms* images needed (by default: `1`).
+- `--contbars_min_nframes`: number of *contbars* images needed (by default: `1`).
 
- **Ejemplos de uso:**
+ **Usage example:**
 
-**crea archivo txt:**    calib_finder 2020-05-16 2 5 --summary
+**Creates a txt file:**    calib_finder 2020-05-16 2 5 --summary
 
-**no crea archivo txt:**    calib_finder 2020-05-16 2 5
+**Doesn't creates a txt file:**    calib_finder 2020-05-16 2 5
 
 
- **Observaciones:**
-- Todos los scripts (menos `rename_files`) realizan una consulta al KOA, por lo que pueden tardarse un poco.
-- Se crean archivos de metadata, por esto es necesario el directorio de salida.
-- Por lo anterior, si no borras los archivos y ejecutas el script en la misma fecha, demorará considerablemente menos, al no hacer nuevamente el query. (**Excepto por `download_files`**)
-- **No borres 'koa_metadata_{date}_filtered.tbl' antes de ejecutar `rename_files`**
+ **Observations:**
+- All scripts (except for `rename_files`) will do a quety to KOA, so they can take some time.
+- Metadata files will be created, that's why the output directory is needed.
+- If you don't delete the metadata files and use the script for the same date, will take less time, because in not doing again the query. (**Except for `download_files`**)
+- **Don't delet 'koa_metadata_{date}_filtered.tbl' befor executing `rename_files`**
