@@ -1,4 +1,4 @@
-# Scripts to work with data of KCWI yipiee #
+# Scripts to work with KCWI data yipiee #
 
 **Description of scripts:**
 
