@@ -4,20 +4,28 @@ import argparse
 import shutil
 
 
-def rename_fits_files(output_dir = "./renamed_files", directory="."): 
+def rename_fits_files(output_dir = "./renamed_files", directory=".", metadata_file = None): 
+    if metadata_file is not None and not os.path.isabs(metadata_file):
+        metadata_file = os.path.join(directory, metadata_file)
+    
     # Change to the specified directory
     if directory != ".":  
         os.chdir(directory)
 
-    # search for the metadata file
-    metadata_file = None
-    for file in os.listdir():
-        if file.endswith("_filtered.tbl"):
-            metadata_file = file
-            break
+
+    # search for the metadata file if not provided
+    if metadata_file is None:
+        for file in os.listdir():
+            if file.endswith("_filtered.tbl"):
+                metadata_file = file
+                break
 
     if metadata_file is None:
         print("No metadata file found.")
+        return
+    
+    elif not os.path.exists(metadata_file):
+        print(f"Metadata file {metadata_file} does not exist.")
         return
 
     table = Table.read(metadata_file, format='ascii.ipac')
@@ -63,10 +71,11 @@ def main():
     parser = argparse.ArgumentParser(description="Rename KCWI FITS files according to the 'ofname' column in the metadata file.")
     parser.add_argument('--output_dir', type=str, default='./renamed_files', help="Directory to save renamed files (default: ./renamed_files).")
     parser.add_argument('--directory', type=str, default='.', help="Directory where the FITS files are located (default: current directory).")
+    parser.add_argument('--metadata_file', type=str, default=None, help="Path to the metadata file (default: search for *_filtered.tbl in the directory).")
     args = parser.parse_args()
 
     try:
-        rename_fits_files(args.output_dir, args.directory)
+        rename_fits_files(args.output_dir, args.directory, args.metadata_file)
     except Exception as e:
         print(f"Error: {e}")
 
