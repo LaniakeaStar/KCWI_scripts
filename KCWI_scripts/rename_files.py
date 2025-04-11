@@ -61,7 +61,7 @@ def rename_fits_files(output_dir = "./renamed_files", directory="."):
 
 def main():
     parser = argparse.ArgumentParser(description="Rename KCWI FITS files according to the 'ofname' column in the metadata file.")
-    parser.add_argument('output_dir', type=str, default='./renamed_files', help="Directory to save renamed files (default: ./renamed_files).")
+    parser.add_argument('--output_dir', type=str, default='./renamed_files', help="Directory to save renamed files (default: ./renamed_files).")
     parser.add_argument('--directory', type=str, default='.', help="Directory where the FITS files are located (default: current directory).")
     args = parser.parse_args()
 
