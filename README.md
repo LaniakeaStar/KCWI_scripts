@@ -52,11 +52,11 @@ download_files 2020-05-15 telescope --output_dir ./downloads/
 
 
 ### 4 **`rename_files`**
-When downloading files using pykoa, they will be named by their `koaid`. With this script, all files will be copied to a new directory and renamed by their `ofname`, which are in the metadata table.
+When downloading files using pykoa, they will be named by their `koaid`. With this script, all files will be copied to a new folder and renamed by their `ofname`, which are in the metadata table.
 
  **Optional arguments:**
  - `--output_dir`: Directory in which you want to save the new files (by default: `"./renamed_files"`).
- - `--directory`: Directory in which you want to execute the script(by default: `"."`).
+ - `--directory`: Directory in which you want to execute the script (by default: `"."`).
  - `--metadata_file`: Table where the names of the files are found (by default: `None` (searchrs for *_filtered.tbl in the directory))
 
  **Usage example:**
