@@ -1,9 +1,11 @@
 import os
 from astropy.table import Table
 import argparse
+import shutil
 
 
-def rename_fits_files(directory="."): 
+def rename_fits_files(output_dir = "./renamed_files", directory="."): 
+    # Change to the specified directory
     if directory != ".":  
         os.chdir(directory)
 
@@ -28,6 +30,10 @@ def rename_fits_files(directory="."):
     # Make dictonary with format {koaid: ofname}
     rename_map = {row['koaid']: row['ofname'] for row in table if row['ofname'].strip()}
 
+    # Create the output directory if it doesn't exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     # Rename the files
     fits_files = [f for f in os.listdir() if f.endswith(".fits")]
     renamed_count = 0
@@ -38,8 +44,11 @@ def rename_fits_files(directory="."):
             if not new_name.endswith(".fits"):
                 new_name += ".fits"  # Asegurar que termine en .fits
 
+            src_path = os.path.join(directory, fits)
+            dst_path = os.path.join(output_dir, new_name) 
+
             try:
-                os.rename(fits, new_name)
+                shutil.copy(src_path, dst_path)  # Copy the file to the new location
                 print(f"{fits} → {new_name}")
                 renamed_count += 1
             except Exception as e:
@@ -48,15 +57,16 @@ def rename_fits_files(directory="."):
     if renamed_count == 0:
         print("No files found to rename.")
     else:
-        print(f"\n {renamed_count} files were renamed.")
+        print(f"\n {renamed_count} files were copied and renamed into '{output_dir}'.")
 
 def main():
     parser = argparse.ArgumentParser(description="Rename KCWI FITS files according to the 'ofname' column in the metadata file.")
+    parser.add_argument('output_dir', type=str, default='./renamed_files', help="Directory to save renamed files (default: ./renamed_files).")
     parser.add_argument('--directory', type=str, default='.', help="Directory where the FITS files are located (default: current directory).")
     args = parser.parse_args()
 
     try:
-        rename_fits_files(args.directory)
+        rename_fits_files(args.output_dir, args.directory)
     except Exception as e:
         print(f"Error: {e}")
 
