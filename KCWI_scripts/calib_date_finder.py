@@ -9,6 +9,7 @@ import scipy
 import argparse
 import csv
 from importlib.resources import files
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # load standard stars from csv file
 def load_stars():
@@ -85,29 +86,32 @@ def check_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_
 
     # if there are missing calibrations or no standard star found, check previous and next days
     if missing_calibrations or not found_dates['STANDARD']:
-        for offset in range(1, days_to_check + 1):
-            for delta in [-offset, offset]:
-                check_date = (pd.to_datetime(date) + pd.Timedelta(days=delta)).strftime('%Y-%m-%d')
-                print(f"Checking calibrations for {check_date}...")
-                calibrations, ra_dec_coords, table = check_date_for_calibrations(check_date)
+        def process_date(delta):
+            check_date = (pd.to_datetime(date) + pd.Timedelta(days=delta)).strftime('%Y-%m-%d')
+            print(f"Checking calibrations for {check_date}...")
+            calibrations, ra_dec_coords, table = check_date_for_calibrations(check_date)
 
-                if calibrations is None:
-                    continue
+            if calibrations is None:
+                return
 
-                for cal in missing_calibrations:
-                    if cal in calibrations and check_date not in found_dates[cal]:
-                        found_dates[cal].append(check_date)
-                        print(f"Calibration {cal} found on {check_date}.")
+            for cal in missing_calibrations:
+                if cal in calibrations and check_date not in found_dates[cal]:
+                    found_dates[cal].append(check_date)
+                    print(f"Calibration {cal} found on {check_date}.")
 
-                if not found_star:
-                    for name, coord in star_coords:
-                        try:
-                            idx, sep, _ = match_coordinates_sky(coord, ra_dec_coords)
-                            if sep.arcsecond <= tolerance_arcsec and check_date not in [d[0] for d in found_dates['STANDARD']]:
-                                found_dates['STANDARD'].append((check_date, name, table['koaid'][idx]))
-                                print(f"Standard star {name} found on {check_date}, file: {table['koaid'][idx]}")
-                        except:
-                            pass
+            if not found_star:
+                for name, coord in star_coords:
+                    try:
+                        idx, sep, _ = match_coordinates_sky(coord, ra_dec_coords)
+                        if sep.arcsecond <= tolerance_arcsec and check_date not in [d[0] for d in found_dates['STANDARD']]:
+                            found_dates['STANDARD'].append((check_date, name, table['koaid'][idx]))
+                            print(f"Standard star {name} found on {check_date}, file: {table['koaid'][idx]}")
+                    except:
+                        pass
+
+        all_offsets = [delta for offset in range(1, days_to_check + 1) for delta in [-offset, offset]]
+        with ThreadPoolExecutor() as executor:
+            executor.map(process_date, all_offsets)
                         
     # report all dates where the missing calibrations were found
     for cal, dates in found_dates.items():

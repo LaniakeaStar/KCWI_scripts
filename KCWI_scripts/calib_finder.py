@@ -20,7 +20,7 @@ def load_stars():
     
     return stars
 
-def find_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_arcsec=5, summary = False,
+def find_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_arcsec=5, summary = False, max_workers = 4,
                           bias_min_nframes=7, flatlamp_min_nframes=6, domeflat_min_nframes=3, 
                           twiflat_min_nframes=1, dark_min_nframes=3, arc_min_nframes=1, contbars_min_nframes=1):
 
@@ -108,7 +108,7 @@ def find_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_a
         result = check_date_for_calibrations(check_date)
         return check_date, result
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers = max_workers) as executor:
         futures = {executor.submit(process_date, d): d for d in check_dates}
 
         for future in as_completed(futures):
@@ -205,12 +205,14 @@ def main():
     parser.add_argument('--dark_min_nframes', type=int, default=3, help = "Minumun number of DARK frames required.")
     parser.add_argument('--arc_min_nframes', type=int, default=1, help = "Minumun number of ARCLAMP frames required.")
     parser.add_argument('--contbars_min_nframes', type=int, default=1, help = "Minumun number of CONTBARS frames required.")    
+    parser.add_argument('--max_workers', type=int, default = 4, help = "Number of threads to use for parallel processing.")
 
     args = parser.parse_args()
 
     try:
         find_calibrations(args.date, outpath = args.output_dir, days_to_check = args.days_to_check, tolerance_arcsec = args.tolerance_arcsec, 
-                          summary = args.summary,  bias_min_nframes = args.bias_min_nframes, flatlamp_min_nframes = args.flatlamp_min_nframes, 
+                          summary = args.summary, max_workers = args.max_workers,   
+                          bias_min_nframes = args.bias_min_nframes, flatlamp_min_nframes = args.flatlamp_min_nframes, 
                           domeflat_min_nframes = args.domeflat_min_nframes, twiflat_min_nframes = args.twiflat_min_nframes, 
                           dark_min_nframes = args.dark_min_nframes, arc_min_nframes = args.arc_min_nframes, contbars_min_nframes = args.contbars_min_nframes)
     
@@ -220,4 +222,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-# hola :D
+# Hello :D
