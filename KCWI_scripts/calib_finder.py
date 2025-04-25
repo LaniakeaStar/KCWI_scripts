@@ -7,6 +7,7 @@ from pykoa.koa import Koa
 import csv
 import argparse
 from importlib.resources import files
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def load_stars():
     data_file = files("KCWI_scripts").joinpath("data", "standard_stars.csv")
@@ -96,40 +97,47 @@ def find_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_a
         print("\n✅ All required calibrations and a standard star are present.")
         return
 
-    for offset in range(1, days_to_check + 1):
+    check_dates = [
+    (pd.to_datetime(date) + pd.Timedelta(days=delta)).strftime('%Y-%m-%d')
+    for offset in range(1, days_to_check + 1)
+    for delta in [-offset, offset]
+]
+
+# Función wrapper para el executor
+def process_date(check_date):
+    result = check_date_for_calibrations(check_date)
+    return check_date, result
+
+with ThreadPoolExecutor(max_workers=4) as executor:
+    futures = {executor.submit(process_date, d): d for d in check_dates}
+
+    for future in as_completed(futures):
+        check_date, (table, calibrations_koaid, ra_dec_coords) = future.result()
+
+        if table is None:
+            continue
+
+        for cal in missing_calibrations:
+            if missing_calibrations[cal] > 0 and cal in calibrations_koaid:
+                koaid = calibrations_koaid[cal]
+                print(f"📥 Adding {cal} from {check_date} (File: {koaid})...")
+                download_list.append(koaid)
+                found_calibrations[cal].append((check_date, koaid))
+                missing_calibrations[cal] -= 1
+
+        if not found_star:
+            for name, coord in star_skycoords:
+                try:
+                    idx, sep, _ = match_coordinates_sky(coord, ra_dec_coords)
+                    if sep.arcsecond <= tolerance_arcsec:
+                        found_star = (check_date, name, table['koaid'][idx])
+                        print(f"🌟 Standard star {name} found on {check_date}, file: {table['koaid'][idx]}")
+                        break
+                except:
+                    pass
+
         if all(n <= 0 for n in missing_calibrations.values()) and found_star:
             break  
-
-        for delta in [-offset, offset]:  
-            check_date = (pd.to_datetime(date) + pd.Timedelta(days=delta)).strftime('%Y-%m-%d')
-            print(f"Checking calibrations for {check_date}...")
-
-            table, calibrations_koaid, ra_dec_coords = check_date_for_calibrations(check_date)
-
-            if table is None:
-                continue
-
-            for cal in missing_calibrations:
-                if missing_calibrations[cal] > 0 and cal in calibrations_koaid:
-                    koaid = calibrations_koaid[cal]
-                    print(f"📥 Adding {cal} from {check_date} (File: {koaid})...")
-                    download_list.append(koaid)  
-                    found_calibrations[cal].append((check_date, koaid))
-                    missing_calibrations[cal] -= 1
-
-            if not found_star:
-                for name, coord in star_skycoords:
-                    try:
-                        idx, sep, _ = match_coordinates_sky(coord, ra_dec_coords)
-                        if sep.arcsecond <= tolerance_arcsec:
-                            found_star = (check_date, name, table['koaid'][idx])
-                            print(f"🌟 Standard star {name} found on {check_date}, file: {table['koaid'][idx]}")
-                            break  
-                    except:
-                        pass
-
-            if all(n <= 0 for n in missing_calibrations.values()) and found_star:
-                break  
 
 
     print("\n📊 ** Summary of all calibrations found **")
