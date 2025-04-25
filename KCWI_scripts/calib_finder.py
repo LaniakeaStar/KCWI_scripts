@@ -98,32 +98,32 @@ def find_calibrations(date, outpath='./downloads/', days_to_check=7, tolerance_a
         return
 
     check_dates = [
-    (pd.to_datetime(date) + pd.Timedelta(days=delta)).strftime('%Y-%m-%d')
-    for offset in range(1, days_to_check + 1)
-    for delta in [-offset, offset]
-]
+        (pd.to_datetime(date) + pd.Timedelta(days=delta)).strftime('%Y-%m-%d')
+        for offset in range(1, days_to_check + 1)
+        for delta in [-offset, offset]
+    ]
 
-# Función wrapper para el executor
-def process_date(check_date):
-    result = check_date_for_calibrations(check_date)
-    return check_date, result
+    # Función wrapper para el executor
+    def process_date(check_date):
+        result = check_date_for_calibrations(check_date)
+        return check_date, result
 
-with ThreadPoolExecutor(max_workers=4) as executor:
-    futures = {executor.submit(process_date, d): d for d in check_dates}
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {executor.submit(process_date, d): d for d in check_dates}
 
-    for future in as_completed(futures):
-        check_date, (table, calibrations_koaid, ra_dec_coords) = future.result()
+        for future in as_completed(futures):
+            check_date, (table, calibrations_koaid, ra_dec_coords) = future.result()
 
-        if table is None:
-            continue
+            if table is None:
+                continue
 
-        for cal in missing_calibrations:
-            if missing_calibrations[cal] > 0 and cal in calibrations_koaid:
-                koaid = calibrations_koaid[cal]
-                print(f"📥 Adding {cal} from {check_date} (File: {koaid})...")
-                download_list.append(koaid)
-                found_calibrations[cal].append((check_date, koaid))
-                missing_calibrations[cal] -= 1
+            for cal in missing_calibrations:
+                if missing_calibrations[cal] > 0 and cal in calibrations_koaid:
+                    koaid = calibrations_koaid[cal]
+                    print(f"📥 Adding {cal} from {check_date} (File: {koaid})...")
+                    download_list.append(koaid)
+                    found_calibrations[cal].append((check_date, koaid))
+                    missing_calibrations[cal] -= 1
 
         if not found_star:
             for name, coord in star_skycoords:
@@ -137,7 +137,8 @@ with ThreadPoolExecutor(max_workers=4) as executor:
                     pass
 
         if all(n <= 0 for n in missing_calibrations.values()) and found_star:
-            break  
+            print("\n✅ All required calibrations and a standard star are present.")
+            return  
 
 
     print("\n📊 ** Summary of all calibrations found **")
