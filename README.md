@@ -90,8 +90,9 @@ Similar to calib_date_finder, will search missing calibratios in anterior and po
 - `tolerance_arcsec`: Tolerance radius in arcseconds to find matching standard stars
 
  **Optionals**
+- `--max_workers`: Number of threads to use for parallel processing (by default `4`)
 - `--summary`: Creates a .txt file of all calibrations found. 
-- `--output_dir`: Directorio de salida (por defecto `"."`).
+- `--output_dir`: Directorio de salida (by default `"."`).
 - `--bias_min_nframes`: number of *bias* frames needed (by default: `7`). 
 - `--flatlamp_min_nframes`: number of *flatlamp* frames needed (by default: `6`).
 - `--domeflat_min_nframes`: number of *domeflats* frames needed (by default: `3`).
